@@ -1,0 +1,28 @@
+{
+  "name": "iris",
+  "version": "0.0.1",
+  "description": "Store and convert color variables with 'new IRIS.Color()'",
+  "main": "src/iris.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sydneyzh/iris"
+  },
+  "homepage": "https://github.com/sydneyzh/iris",
+  "keywords": [
+    "color",
+    "colour",
+    "rgb",
+    "hsv",
+    "hex",
+    "api",
+    "util"
+  ],
+  "author": "sydneyzh",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^3.4.2"
+  }
+}
