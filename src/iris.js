@@ -42,7 +42,15 @@ var _utils = {
 
 		};
 
-	}()
+	}(),
+	num2HexString: function( num ) {
+
+		var res = Math.round( num ).toString( 16 );
+		if ( res.length === 1 ) res = '0' + res;
+		return res;
+
+	}
+
 };
 
 var _math = {
@@ -476,9 +484,9 @@ Object.assign( IRIS.HexStringElement.prototype, IRIS.Element.prototype, {
 
 			// rgb to hexString
 			this.val =
-				Math.round( updatedEl.r ).toString( 16 ) +
-				Math.round( updatedEl.g ).toString( 16 ) +
-				Math.round( updatedEl.b ).toString( 16 );
+				_utils.num2HexString( updatedEl.r ) +
+				_utils.num2HexString( updatedEl.g ) +
+				_utils.num2HexString( updatedEl.b );
 
 		}
 

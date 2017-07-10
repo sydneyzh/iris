@@ -377,4 +377,16 @@ describe( 'IRIS.Color', function () {
 
 	} );
 
+	describe( 'fix bugs', function () {
+
+		it( 'correct format of hexString', function () {
+
+			var c = new IRIS.Color();
+			c.setRGB( 0, 0, 255 );
+			assert.equal( '0000ff', c.getHexString() );
+
+		} );
+
+	} );
+
 } );
