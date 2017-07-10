@@ -107,7 +107,7 @@ IRIS.Node = function ( tag ) {
 
 	} );
 
-	Object.defineProperty( this, 'outEdges', {
+	Object.defineProperty( this, 'edges', {
 
 		enumerable: true,
 		value: {}
@@ -147,14 +147,12 @@ IRIS.Node.prototype = {
 		return this;
 
 	},
-	addOutEdge: function ( tag, callback ) {
+	addEdge: function ( tag, callback ) {
 
 		if ( typeof callback !== 'function' ) console.error( callback, 'is not a function.' );
-		if ( this.outEdges[ tag ] !== undefined ) console.error( 'tag', tag, 'already exists.' );
+		if ( this.edges[ tag ] !== undefined ) console.error( 'tag', tag, 'already exists.' );
 
-		// detect loop ...
-
-		this.outEdges[ tag ] = callback;
+		this.edges[ tag ] = callback;
 
 		return this;
 
@@ -179,7 +177,7 @@ IRIS.Node.prototype = {
 
 		}
 
-		// trigger callbacks on the outEdges
+		// trigger callbacks on the edges
 		this._forward();
 
 		// setting _stopElChangePropagation back to false
@@ -190,9 +188,9 @@ IRIS.Node.prototype = {
 
 		// execute the callbacks
 		// reference of this node is passed as parameter
-		for ( var key in this.outEdges ) {
+		for ( var key in this.edges ) {
 
-			this.outEdges[ key ]( this );
+			this.edges[ key ]( this );
 
 		}
 

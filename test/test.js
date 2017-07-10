@@ -79,7 +79,7 @@ describe( 'IRIS.Element vals:', function () {
 
 } );
 
-describe( 'IRIS.Node and Element interactions:', function () {
+describe( 'Basic IRIS.Node interactions:', function () {
 
 	var node_a = new IRIS.Node( 'node_a' );
 	var node_b = new IRIS.Node( 'node_b' );
@@ -108,20 +108,14 @@ describe( 'IRIS.Node and Element interactions:', function () {
 
 	// add element update method
 
-	var el_a_2_update_counter = 0;
 	el_a_2.update = function ( updatedEl ) {
-
-		el_a_2_update_counter ++;
 
 		if ( updatedEl.tag === 'a_1' )
 			this.val = updatedEl.val;
 
 	}.bind( el_a_2 );
 
-	var el_b_2_update_counter = 0;
 	el_b_2.update = function( updatedEl ) {
-
-		el_b_2_update_counter ++;
 
 		if ( updatedEl.tag === 'b_1' ) {
 
@@ -132,9 +126,9 @@ describe( 'IRIS.Node and Element interactions:', function () {
 
 	}.bind( el_b_2 );
 
-	// addOutEdge
+	// addEdge
 
-	node_a.addOutEdge( 'sync_b', function ( node ) {
+	node_a.addEdge( 'sync_b', function ( node ) {
 
 		// parameter node is the triggering node
 		// this is bound to node_b
@@ -144,13 +138,13 @@ describe( 'IRIS.Node and Element interactions:', function () {
 
 	}.bind( node_b ) );
 
-	it( '#addOutEdge', function () {
+	it( '#addEdge', function () {
 
-		assert.equal( Object.keys( node_a.outEdges ).length, 1 );
+		assert.equal( Object.keys( node_a.edges ).length, 1 );
 
 	} );
 
-	// setting el val will trigger other els update, and outEdge callback
+	// setting el val will trigger other els update, and edge callback
 
 	var new_el_a_1_value = 5;
 	node_a.els[ 'a_1' ].val = new_el_a_1_value;
@@ -164,21 +158,60 @@ describe( 'IRIS.Node and Element interactions:', function () {
 		assert.equal( el_a_2.val, new_el_a_1_value );
 
 	} );
-	it( 'outEdge callback is executed', function () {
+	it( 'edge callback is executed', function () {
 
 		assert.equal( el_b_1.val, new_el_a_1_value );
 
 	} );
-	it( 'value change in outEdge callback triggers the other element sibling updates', function() {
+	it( 'value change in edge callback triggers the other element sibling updates', function() {
 
 		assert.equal( el_b_2.val_x, new_el_a_1_value );
 		assert.equal( el_b_2.val_y, new_el_a_1_value );
 
 	} );
-	it( 'check update counters', function () {
 
-		assert.equal( el_a_2_update_counter, 1 );
-		assert.equal( el_b_2_update_counter, 1 );
+} );
+
+describe( 'Cycle prevention', function () {
+
+	var node_a = new IRIS.Node( 'a' );
+	var node_b = new IRIS.Node( 'b' );
+	var node_c = new IRIS.Node( 'c' );
+	var node_d = new IRIS.Node( 'd' );
+
+	node_a.addElement( new IRIS.Element( 'el-1', 0 ) );
+	node_b.addElement( new IRIS.Element( 'el-2', 0 ) );
+	node_c.addElement( new IRIS.Element( 'el-3', 0 ) );
+	node_d.addElement( new IRIS.Element( 'el-4', 0 ) );
+
+	node_a.addEdge( 'a-to-b',
+			( function ( a ) {
+				this.els[ 'el-2' ].val = a.els[ 'el-1' ].val;
+			} ).bind( node_b ) );
+
+	node_b.addEdge( 'b-to-c',
+			( function ( b ) {
+				this.els[ 'el-3' ].val = b.els[ 'el-2' ].val;
+			} ).bind( node_c ) );
+
+	node_c.addEdge( 'c-to-d',
+			( function( c ){
+				this.els[ 'el-4' ].val = c.els[ 'el-3' ].val;
+			} ).bind( node_d ) );
+
+	node_d.addEdge( 'd-to-a',
+			( function( d ){
+				this.els[ 'el-1' ].val = d.els[ 'el-4' ].val + 1;
+			} ).bind( node_a ) );
+
+	it( 'no cycling propagation', function () {
+
+		node_a.els[ 'el-1' ].val = 1;
+
+		assert.equal( node_b.els[ 'el-2' ].val, 1 );
+		assert.equal( node_c.els[ 'el-3' ].val, 1 );
+		assert.equal( node_d.els[ 'el-4' ].val, 1 );
+		assert.equal( node_a.els[ 'el-1' ].val, 2 );
 
 	} );
 
