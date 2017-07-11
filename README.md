@@ -1,7 +1,11 @@
 iris
 ========
 
-Store and convert color variables with 'new IRIS.Color()'
+Store and convert color variables with `IRIS.Color()`
+
+## Feature ##
+
+Hands-free instant syncing of internal `RGB`, `HSV`, and `hex string` color representations.
 
 ## Usage ##
 
@@ -34,6 +38,8 @@ color.getHexString(); // 3445c7
 + `s` and `v` are numbers from 0 to 100
 
 + `hexString` is a string representing the colors from `'000000'` to `'ffffff'`
+
+\*The setters do not wrap input values. If an out-of-range value is detected, an error will be reported to the console.\*
 
 ### IRIS.Color
 #### Public Methods
@@ -88,3 +94,15 @@ color.getHexString(); // 3445c7
 + `getHSV( out )`
 
   sets the `out` array with `h, s, v`
+
+## Bonus ##
+
+Two infrastructure classes -- `IRIS.Element` and `IRIS.Node` can be use to implement graph data structures. Details are explained as comments in the source code.
+
+## Demos hosted on Codepen ##
+
+- [iris - chained reaction - 1D](https://codepen.io/sydneyzh/pen/jwQGMg)
+
+- [iris - chained reaction - 2D](https://codepen.io/sydneyzh/pen/awQRVJ)
+
+- [iris - chained reaction - 2D Animation](https://codepen.io/sydneyzh/pen/Ogadxr)
