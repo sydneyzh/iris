@@ -94,13 +94,7 @@ var _math = {
 
 };
 
-var IRIS = IRIS || ( function () {
-
-	return {
-
-	};
-
-} )();
+var IRIS = IRIS || {};
 
 IRIS.Node = function ( tag ) {
 
